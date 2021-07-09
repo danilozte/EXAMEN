@@ -1,16 +1,43 @@
-int led = 27;
+int TEMPERATURA = 3;
+int led1 = 12;
+int led2 = 27;
+int led3 = 33;
 
 void setup(){
 Serial.begin (115200);
-pinMode(led , OUTPUT);
+pinMode(led1 , OUTPUT);
+pinMode(led2 , OUTPUT);
+pinMode(led3 , OUTPUT);
 
 }
+
+
+
 
 void loop(){
 
-digitalWrite( led , HIGH);
-delay(200);
-digitalWrite( led , LOW);
-delay(200);
+switch (TEMPERATURA) {
+  case 0:  digitalWrite( led1 , HIGH); 
+           digitalWrite( led2 , HIGH);
+           delay(200);
+    
+    break;
+  case 2:  digitalWrite( led2 , HIGH);   
+           digitalWrite( led3 , HIGH);
+           delay(200);
+   
+    break;
 
+  case 3: 
+           digitalWrite( led1 , HIGH);   
+           digitalWrite( led2 , HIGH);
+           digitalWrite( led3 , HIGH);
+           delay(200);
+   
+    break;
+  default:
+          Serial.println ("NINGUNA DE LAS ANTERIORES");
+    break;
 }
+}
+
