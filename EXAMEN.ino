@@ -19,7 +19,7 @@ void loop(){
 
 switch (TEMPERATURA) {
   case 0:  digitalWrite( led1 , HIGH); 
-           digitalWrite( led2 , HIGH);
+           digitalWrite( led2 , HIGH);///
            delay(200);
     
     break;
