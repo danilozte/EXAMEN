@@ -1,5 +1,8 @@
-int led = 27;
-int led1 = 33;
+int TEMPERATURA = 0; 
+int led1 =  27;
+int led2 = 33;
+int led3 = 33;
+
 
 void setup(){
 Serial.begin (115200);
