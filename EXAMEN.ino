@@ -38,6 +38,6 @@ switch (TEMPERATURA) {
     break;
   default:
           Serial.println ("NINGUNA DE LAS ANTERIORES");
-    break;
+    break;// Termina  el switch si no se cumple ninguno de los casos
 }
 }
