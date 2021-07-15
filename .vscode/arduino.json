@@ -1,5 +1,5 @@
 {
     "board": "esp32:esp32:esp32",
     "port": "COM4",
-    "sketch": "TEMP.ino"
+    "sketch": "WHILE\\While.ino"
 }
