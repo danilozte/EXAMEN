@@ -1,5 +1,5 @@
 // configuracion de varibles
-int LED = 16;
+ int LED = 16;
 void setup(){
     pinMode(LED,OUTPUT);
     Serial.begin(9600);
@@ -21,11 +21,4 @@ void setup(){
 
 void loop(){
 }
-    /*
-digitalWrite(LED,HIGH);
-delay(200);
-digitalWrite(LED,LOW);
-delay(200);
-}
-*/
 
