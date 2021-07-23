@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <WebServer.h>
+#include <ArduinoJson.h>
 
 
 //**************************************
@@ -12,7 +13,14 @@ const int mqtt_port = 1883; // puerto del host
 const char *mqtt_user = "GN6Syw1WklvUdMF";
 const char *mqtt_pass = "CH5d1QQ7DS89yR5";
 const char *root_topic_subscribe = "cxSjqrPrn9NT41G/input";
-const char *root_topic_publish = "cxSjqrPrn9NT41G/output";
+const char *root_topic_publish = "cxSjqrPrn9NT41G/output"; 
+ 
+
+
+const uint8_t LED = 5;            
+const int PUBLISH_FREQUENCY = 2000; // Update rate in milliseconds
+unsigned long timer;
+
 
 
 //**************************************
@@ -53,11 +61,72 @@ void callback(char* topic, byte* payload, unsigned int length);
 void reconnect();
 void setup_WiFi();
 
+
+//*****************************
+//***       CALLBACK        ***
+//*****************************
+
+void callback(char* topic, byte* payload, unsigned int length){
+
+    // "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
+    Serial.print("Message arrived [");
+    Serial.print(topic);
+    Serial.print("] ");
+    Serial.println(length);
+
+// Check it is the correct Topic  
+    if (strcmp(topic, "State") == 0) {
+
+      String incoming = "";
+	  
+	    for (int i = 0; i < length; i++) {
+		    incoming = incoming + String((char)payload[i]);
+        Serial.println("");
+        Serial.print((int)payload[i]); // printed bytes as integers to serial to check for unprintable characters
+        Serial.println("");
+	  }
+
+
+    StaticJsonDocument <256> doc;
+    DeserializationError error = deserializeJson(doc, payload, length);
+    
+    // deserializeJson(doc,str); can use string instead of payload
+    
+
+    if (error) {
+      Serial.print(F("deserializeJson() failed: "));
+      Serial.println(error.c_str());
+
+      return;
+    }
+
+      const char* sensor = doc["sensor"]; // "gps"
+      long time =          doc["time"]; // 1351824120
+      float longitud =     doc["data"][0]; // 48.75608
+      float latitud =      doc["data"][1]; // 2.302038
+
+      Serial.println(sensor);
+      Serial.println(time);
+      Serial.println(longitud,6);
+      Serial.println(latitud,6);
+      
+
+      if (latitud == 2.3020){
+        digitalWrite (LED, HIGH);
+      }
+      else
+      {
+        digitalWrite(LED, LOW);
+      }
+  }
+}
+
 void setup() {
 
   Serial.begin(115200);
- 
-
+  pinMode(LED, OUTPUT);
+  uint8_t analogPin = 34; // Pin used to read data from GPIO34 ADC_CH6.
+  timer  = millis();
 //****************************************************************
 //** F U N C I O N E S DE MODO DE CONEXION WiFi ******************
 //****************************************************************
@@ -90,6 +159,7 @@ void setup() {
 void loop() {
 
   server.handleClient();
+  /*
   while (Mode_AP == true){
   server.handleClient();
   Serial.println("sigo aqui");
@@ -101,18 +171,22 @@ void loop() {
     }
   
   }
-  
+  */
   if (!client.connected()) {
     reconnect();
   }
-
+  /*
   if (client.connected()){
     String str = "La cuenta es -> " + String(count);
     str.toCharArray(msg,25);
     client.publish(root_topic_publish,msg);
     count++;
-    delay(300);
+    delay(5000);
   }
+  */
+
+    //ubidots.subscribeLastValue(DISP_VARIABLE_LABEL, VARIABLE_LABEL2); // Insert the dataSource and Variable's Labels
+  
   client.loop();
 }
 
@@ -174,22 +248,6 @@ void reconnect() {
 }
 
 
-//*****************************
-//***       CALLBACK        ***
-//*****************************
-
-void callback(char* topic, byte* payload, unsigned int length){
-  String incoming = "";
-  Serial.print("Mensaje recibido desde -> ");
-  Serial.print(topic);
-  Serial.println("");
-  for (int i = 0; i < length; i++) {
-    incoming += (char)payload[i];
-  }
-  incoming.trim();
-  Serial.println("Mensaje -> " + incoming);
-
-}
 
 // mensaje html para mostrar
 
@@ -201,7 +259,6 @@ String answer ="<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF
 //***********************************
 //***       RESPUESTA DE HTML  ******     
 //***********************************
-
 
 
 void handleConnectionRoot() {
