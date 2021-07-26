@@ -46,12 +46,16 @@ PubSubClient client(espClient);
 char msg[25];
 long count = 0;
 bool Mode_AP = true;
+String incoming = "";
+
 bool releState = true;
-float latitud;
-float longitud;
+//float latitud;
+//float longitud;
+
+
 
 int LED = 17;
-int LED2 = 34;
+int LED2 = 26;
 int LED3 = 27;
 
 //************************
@@ -67,21 +71,28 @@ void setup_WiFi();
 
 void callback(char *topic, byte *payload, unsigned int length)
 {
-
-  // "{"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}";
-  Serial.print("Message arrived [");
-  Serial.print(topic);  
-  Serial.print("] ");
-  Serial.println(length);
-
-  String incoming = "";
+  
   for (int i = 0; i < length; i++)
   {
     incoming += ((char)payload[i]);
   }
 
   Serial.println("mensaje" + incoming);
+  // "{"sensor":"gps","time":1351824120,"data":[48.756080,2.302038]}";
+  Serial.print("Message arrived [");
+  Serial.print(topic);  
+  Serial.print("] ");
+  Serial.println(length);
+  if (length == 52){
+  deserialization();
+  }
+}
 
+
+// FUNCION DE DESERIALIZACION 
+void deserialization(){
+
+ 
   StaticJsonDocument<256> doc;
   DeserializationError error = deserializeJson(doc, incoming);    // deserializeJson(doc,incoming); can use string instead of payload
    
@@ -90,7 +101,7 @@ void callback(char *topic, byte *payload, unsigned int length)
     Serial.print(error.c_str());
     return;
     }
-
+  
   const char *sensor = doc["sensor"]; // "gps"
   long time = doc["time"];            // 1351824120
   float longitud = doc["data"][0];    // 48.75608
@@ -98,21 +109,11 @@ void callback(char *topic, byte *payload, unsigned int length)
 
   Serial.println(sensor);
   Serial.println(time);
-  Serial.println(longitud, 6);
+  Serial.println(longitud, 6); 
   Serial.println(latitud, 6);
-  
-   if (latitud == 2.302038)
-  {
-    digitalWrite(LED2, HIGH);
-  }
-  if ( longitud == 48.75608 )
-  {
-    digitalWrite(LED3, HIGH);
-    
-  }
-  
-  client.loop();
  
+  
+  
 }
 
 void setup()
@@ -164,6 +165,9 @@ void loop() // Aqui se encuentra la  funcion de reconexion para no perder la con
   {
     reconnect();
   }
+
+
+
   /*
   if (client.connected()){
     String str = "La cuenta es -> " + String(count);
