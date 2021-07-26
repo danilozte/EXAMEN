@@ -49,8 +49,9 @@ bool Mode_AP = true;
 String incoming = "";
 
 bool releState = true;
-//float latitud;
-//float longitud;
+float latitud;
+float longitud;
+const char* sensor;
 
 
 
@@ -83,7 +84,7 @@ void callback(char *topic, byte *payload, unsigned int length)
   Serial.print(topic);  
   Serial.print("] ");
   Serial.println(length);
-  if (length == 52){
+  if (length == 62){
   deserialization();
   }
 }
@@ -102,17 +103,15 @@ void deserialization(){
     return;
     }
   
-  const char *sensor = doc["sensor"]; // "gps"
+  sensor = doc["sensor"]; // "gps"
   long time = doc["time"];            // 1351824120
-  float longitud = doc["data"][0];    // 48.75608
-  float latitud = doc["data"][1];     // 2.302038
-
+  longitud = doc["data"][0];    // 48.75608
+  latitud = doc["data"][1];     // 2.302038
+  
   Serial.println(sensor);
   Serial.println(time);
   Serial.println(longitud, 6); 
   Serial.println(latitud, 6);
- 
-  
   
 }
 
@@ -122,6 +121,8 @@ void setup()
   Serial.begin(115200);
 
   pinMode(LED, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(LED3, OUTPUT);
   uint8_t analogPin = 34; // Pin used to read data from GPIO34 ADC_CH6.
   //timer = millis();
 
@@ -167,7 +168,6 @@ void loop() // Aqui se encuentra la  funcion de reconexion para no perder la con
   }
 
 
-
   /*
   if (client.connected()){
     String str = "La cuenta es -> " + String(count);
@@ -180,6 +180,15 @@ void loop() // Aqui se encuentra la  funcion de reconexion para no perder la con
 
   //ubidots.subscribeLastValue(DISP_VARIABLE_LABEL, VARIABLE_LABEL2); // Insert the dataSource and Variable's Labels
   */
+   if (longitud == float (48.756081)){
+     digitalWrite(LED2, HIGH); 
+  }
+
+  if (sensor == "gps"){
+     digitalWrite(LED3, HIGH);
+     Serial.print("cierto");
+  }
+  
  client.loop();
 }
 
