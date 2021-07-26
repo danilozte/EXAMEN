@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relay Control | AP</title>
+
+    <style>
+        body {
+                margin: 0px auto;
+                text-align: center;
+                font-family: Helvetica;
+            }
+
+            #title{
+                margin-top: 50px;
+                margin-bottom: 15px;
+                color: rgb(14, 14, 14);
+            }
+
+            #subtitle{
+                margin-top: 0;
+                margin-bottom: 25px;
+                color: dimgray;
+            }
+
+            .onBtn {
+                background-color:#44c767;
+                border-radius:28px;
+                border:1px solid #18ab29;
+                display:inline-block;
+                cursor:pointer;
+                color:#ffffff;
+                font-family:Arial;
+                font-size:17px;
+                padding:16px 35px;
+                text-decoration:none;
+                text-shadow:0px 1px 0px #2f6627;
+                margin-right: 50px;
+            }
+            .onBtn:hover {
+                background-color: #04e335;
+            }
+            .onBtn:active {
+                position:relative;
+                top:1px;
+            }
+
+            .offBtn {
+                background-color:#f05d67;
+                border-radius:28px;
+                border:1px solid #e84165;
+                display:inline-block;
+                cursor:pointer;
+                color:#ffffff;
+                font-family:Arial;
+                font-size:17px;
+                padding:16px 35px;
+                text-decoration:none;
+                text-shadow:0px 1px 0px #7a1515;
+            }
+            .offBtn:hover {
+                background-color:#f22954;
+            }
+            .offBtn:active {
+                position:relative;
+                top:1px;
+            }
+
+    </style>
+
+</head>
+<body>
+    <div>
+        <h1 id="title">SERVIDOR WEB ESP32</h1>
+        <h3 id="subtitle">Modo Estación (STA)</h3>
+    </div>
+    <a href="/relayOn" class="onBtn">ON</a>
+    <a href="/relayOff" class="offBtn">OFF</a>
+  
+</body>
+</html>
